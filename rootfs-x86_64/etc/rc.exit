@@ -1,0 +1,40 @@
+#!/bin/sh
+
+umask 022
+
+. /etc/rc.conf
+
+case "$1" in
+reboot|poweroff)
+	;;
+*)
+	echo "Invalid action '$1' for rc.exit " 1>&2
+	exit 1
+	;;
+esac
+
+# Set linefeed mode to avoid staircase effect
+echo; /bin/stty onlcr
+
+/bin/dd if=/dev/urandom of=/etc/random-seed count=1 bs=512 2>/dev/null
+
+/bin/killall5 -s TERM
+/bin/sleep 3
+/bin/killall5 -s KILL
+
+/bin/mount -o remount,ro /
+
+/bin/umount -a
+
+/bin/sync
+/bin/sleep 3
+wait
+
+case "$1" in
+reboot)
+	/bin/halt -r
+	;;
+poweroff)
+	/bin/halt -p
+	;;
+esac

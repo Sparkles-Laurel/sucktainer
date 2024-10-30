@@ -1,0 +1,22 @@
+.TH UTMP 1 utmp\-0.0
+.SH NAME
+utmp \- manage utmp entry for a session
+.SH SYPNOSIS
+.B utmp
+.RB [
+.IR shell\ arguments
+.RB ]
+.SH DESCRIPTION
+.B utmp
+adds an entry to utmp for a shell. It trusts the
+.I SHELL
+environment variable, and in case this one is not set, it gets the
+user defined shell from the
+.I /etc/passwd
+file. All the arguments passed to
+.B utmp
+are passed to the child shell.
+.SH AUTHORS
+Written by Roberto E. Vargas Caballero
+.SH LICENSE
+See the LICENSE file for the terms of distribution.

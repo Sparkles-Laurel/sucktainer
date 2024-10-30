@@ -1,0 +1,67 @@
+#!/bin/sh
+
+umask 022
+
+. /etc/rc.conf
+
+# Soft reboot on ctrl-alt-del
+/bin/ctrlaltdel -s
+
+/bin/mount -n -t proc -o nosuid,noexec,nodev proc /proc
+/bin/mount -n -t sysfs -o nosuid,noexec,nodev sysfs /sys
+/bin/mount -n -t tmpfs -o nosuid,mode=0755 dev /dev
+/bin/mkdir -p /dev/pts
+/bin/mount -n -t devpts -o gid=5,mode=0620 devpts /dev/pts
+
+/bin/grep -q " verbose" /proc/cmdline && dmesg -n 8 || dmesg -n 3
+
+/bin/mount -o remount,ro /
+
+/bin/smdev -s
+
+echo /bin/smdev > /proc/sys/kernel/hotplug
+
+# HACK!
+cd /dev
+/bin/ln -sf /proc/self/fd/0 stdin
+/bin/ln -sf /proc/self/fd/1 stdout
+/bin/ln -sf /proc/self/fd/2 stderr
+cd - 1>/dev/null
+
+/bin/fsck -ATa
+if test $? -eq 1
+then
+	echo Filesystem errors exist, fix manually.
+	/bin/sh
+	/bin/halt -r
+fi
+
+/bin/mount -o remount,rw /
+/bin/mount -a
+
+/bin/ip addr add 127.0.0.1/8 dev lo broadcast + scope host
+/bin/ip link set lo up
+
+test -f /etc/random-seed && /bin/cat /etc/random-seed >/dev/urandom
+/bin/dd if=/dev/urandom of=/etc/random-seed count=1 bs=512 2>/dev/null
+
+/bin/dmesg > /log/dmesg.log
+if test -e /proc/sys/kernel/dmesg_restrict && test $(/bin/cat /proc/sys/kernel/dmesg_restrict) = "1"
+then
+	/bin/chmod 0600 /log/dmesg.log
+else
+	/bin/chmod 0644 /log/dmesg.log
+fi
+
+ulimit -c unlimited
+
+sleep 2
+
+loadkeys de
+
+echo
+/bin/sh -c '/bin/respawn /bin/getty /dev/tty1 linux' &>/dev/null &
+/bin/sh -c '/bin/respawn /bin/getty /dev/tty2 linux' &>/dev/null &
+/bin/sh -c '/bin/respawn /bin/getty /dev/tty3 linux' &>/dev/null &
+/bin/sh -c '/bin/respawn /bin/getty /dev/tty4 linux' &>/dev/null &
+

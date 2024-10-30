@@ -1,0 +1,49 @@
+.TH VIS 1 vis\-0.2
+.nh
+.SH NAME
+vis - a vim like text editor
+.SH SYNOPSIS
+.B vis
+.RI [ +command ...]
+.RI [ files ...|-]
+.br
+.SH DESCRIPTION
+.B vis
+is a highly efficient vim like text editor.
+.SH OPTIONS
+.B \-v
+Print version information and exit.
+
+.B \-\-
+Denotes the end of the options. Arguments after this will be handled as a file name.
+.SH ENVIRONMENT VARIABLES
+.TP
+.B VIS_PATH
+Override path to look for Lua support files as used for syntax highlighting.
+Defaults (in this order) to:
+.RS
+.RS
+.TP
+The location of the vis binary
+.TP
+.B $XDG_CONFIG_HOME/vis
+where
+.B $XDG_CONFIG_HOME
+refers to
+.B $HOME/.config
+if unset
+.TP
+.B  /usr/local/share/vis
+.TP
+.B  /usr/share/vis
+.RE
+.RE
+.TP
+.B VIS_THEME
+Override syntax highlighting theme to use.
+.SH HELP
+Type
+.B :help
+to get a list of currently active key bindings and their respective meaning.
+.SH AUTHOR
+vis is written by Marc André Tanner <mat at brain-dump.org>

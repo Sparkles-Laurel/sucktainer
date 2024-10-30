@@ -1,0 +1,39 @@
+.Dd 2015-10-08
+.Dt DATE 1
+.Os sbase 0.0
+.Sh NAME
+.Nm date
+.Nd print date and time
+.Sh SYNOPSIS
+.Nm
+.Op Fl d Ar time
+.Op Fl u
+.Op Cm + Ns Ar format
+.Sh DESCRIPTION
+.Nm
+prints the date and time according to
+.Xr locale 7
+or
+.Ar format
+using
+.Xr strftime 3 .
+.Sh OPTIONS
+.Bl -tag -width Ds
+.It Fl d Ar time
+Print
+.Ar time
+given as the number of seconds since the
+Unix epoch 1970-01-01T00:00:00Z.
+.It Fl u
+Print UTC time instead of local time.
+.El
+.Sh STANDARDS
+The
+.Nm
+utility is compliant with the
+.St -p1003.1-2013
+specification.
+.Pp
+The
+.Op Fl d
+flag is an extension to that specification.

@@ -1,0 +1,3 @@
+/dev/sdXY	/	ext4	rw,noatime,discard		0 1
+/dev/sdXY	/efi	vfat	defaults,owner,flush,umask=000	0 0
+tmpfs		/tmp	tmpfs	nodev,nosuid,mode=1777		0 0
